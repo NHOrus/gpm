@@ -941,7 +941,7 @@ static unsigned short clear_sel_args[6]={0, 0,0, 0,0, 4};
 static unsigned char *clear_sel_arg= (unsigned char *)clear_sel_args+1;
 
 /*------------*/
-static inline void scr_dump(int fd, FILE *f, unsigned char *buffer, int vc)
+static inline void gpm_scr_dump(int fd, FILE *f, unsigned char *buffer, int vc)
 {
    int dumpfd;
    char dumpname[20];
@@ -960,7 +960,7 @@ static inline void scr_dump(int fd, FILE *f, unsigned char *buffer, int vc)
 }
 
 /*------------*/
-static inline void scr_restore(int fd, FILE *f, unsigned char *buffer, int vc)
+static inline void gpm_scr_restore(int fd, FILE *f, unsigned char *buffer, int vc)
 {
    int dumpfd;
    char dumpname[20];
@@ -1002,7 +1002,7 @@ Posted *postmenu(int fd, FILE *f, Draw *draw, int x, int y, int console)
    if (!new) return NULL;
    new->draw=draw;
    new->dump=dump=malloc(opt_buf);
-   scr_dump(fd,f,dump,console);
+   gpm_scr_dump(fd,f,dump,console);
    lines=dump[0]; columns=dump[1];
    i=(columns*dump[3]+dump[2])*2+1; /* where to get it */
    if (i<0) i=1;
@@ -1060,7 +1060,7 @@ Posted *postmenu(int fd, FILE *f, Draw *draw, int x, int y, int console)
    for (i=0; i<draw->width; i++) PUTC(HORLINE,draw->bord,draw->back);
    PUTC(LRCORNER,draw->bord,draw->back);
 
-   scr_restore(fd,f,dump,console);
+   gpm_scr_restore(fd,f,dump,console);
    free(dump);
 
 #undef PUTC
@@ -1077,7 +1077,7 @@ Posted *unpostmenu(int fd, FILE *f, Posted *which, int vc)
 {
    Posted *prev=which->prev;
 
-   scr_restore(fd,f,which->dump, vc);
+   gpm_scr_restore(fd,f,which->dump, vc);
    ioctl(fd,TCXONC,TCOON); /* activate the console */  
    free(which->dump);
    free(which);
