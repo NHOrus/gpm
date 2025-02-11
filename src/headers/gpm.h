@@ -25,6 +25,18 @@
 
 #include <paths.h>              /* _PATH_VARRUN etc. */
 
+#ifdef HAVE_NCURSES_H
+#include <ncurses.h>
+#else
+#ifdef HAVE_NCURSES_CURSES_H
+#include <ncurses/curses.h>
+#else
+#ifdef HAVE_CURSES_H
+#include <curses.h>
+#endif /* HAVE_CURSES_H */
+#endif /* HAVE_NCURSES_CURSES_H */
+#endif /* HAVE_NCURSES_H */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -268,7 +280,7 @@ Gpm_Roi * Gpm_LowerRoi(Gpm_Roi *which, Gpm_Roi *after);
 /* libcurses.c */
 /* #include <curses.h>  Hmm... seems risky */
 
-extern int Gpm_Wgetch();
+extern int Gpm_Wgetch(WINDOW *win);
 #define Gpm_Getch() (Gpm_Wgetch(NULL))
 
 /* libxtra.c */
